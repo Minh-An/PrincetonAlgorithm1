@@ -21,3 +21,5 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 week1/assignment1/percolation/
+week1/assignment1/out/production/assignment1/percolation/
+week1/assignment1/src/percolation/
