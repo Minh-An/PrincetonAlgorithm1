@@ -85,7 +85,9 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
+
         return _quickUnion.connected(0, NUM_ROW_COLS*NUM_ROW_COLS+1);
+
     }
 
     // test client (optional)
