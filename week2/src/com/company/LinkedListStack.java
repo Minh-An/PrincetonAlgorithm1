@@ -19,20 +19,25 @@ public class LinkedListStack<Item> implements Iterable<Item> {
 
     //an iterator that iterates through a linked list
     private class LinkedListIterator implements Iterator<Item> {
+
+        Node current = first;
+
         @Override
         public boolean hasNext() {
-            return false;
+            return current != null;
         }
 
         @Override
         public Item next() {
-            return null;
+            Item item = current.item;
+            current = current.next;
+            return item;
         }
     }
 
     public LinkedListStack() {
         n = 0;
-        first = new Node();
+        first = null;
     }
 
     private class Node
