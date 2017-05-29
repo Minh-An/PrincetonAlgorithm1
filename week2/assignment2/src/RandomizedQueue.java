@@ -44,7 +44,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public void enqueue(Item item)
     {
         if(item == null) throw new NullPointerException();
-        if (last == queue.length)
+        if (last == queue.length-1)
         {
             resize(2 * queue.length);
         }
@@ -65,7 +65,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item item = null;
         while(item == null)
         {
-            index = StdRandom.uniform(last -1);
+            index = StdRandom.uniform(last);
             item = queue[index];
         }
         queue[index] = null;
@@ -83,11 +83,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      */
     public Item sample()
     {
+        if(isEmpty())
+        {
+            throw new NoSuchElementException("Stack underflow");
+        }
         int index;
         Item item = null;
         while(item == null)
         {
-            index = StdRandom.uniform(last -1);
+            index = StdRandom.uniform(last);
             item = queue[index];
         }
         return item;
@@ -164,25 +168,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // unit testing (optional)
     public static void main(String[] args)
     {
-        RandomizedQueue<Integer> queue = new RandomizedQueue<>();
-        for (int i = 1; i <= 10; i++)
-        {
-            queue.enqueue(i);
-        }
-        for (int i = 1; i <= 5; i++)
-        {
-            queue.dequeue();
-        }
+        RandomizedQueue<Integer> rq = new RandomizedQueue<>();
+        rq.isEmpty();
+        rq.enqueue(25);
+        rq.enqueue(39);
+        rq.dequeue();
+        System.out.println( rq.size());   //     ==> 1
+        rq.enqueue(39);
+        System.out.println(rq.dequeue()); //     ==> 39
+        System.out.println(rq.dequeue()) ;//    ==> 39
+        rq.enqueue(33);
+        System.out.println(rq.dequeue());//     ==> 33
+        rq.enqueue(35);
 
 
-        for (int x : queue) {
-            System.out.printf("Outside: %d%n", x);
-
-            for (int y :queue) {
-                System.out.println(y);
-            }
-
-        }
     }
 
 }
