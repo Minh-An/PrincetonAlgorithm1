@@ -16,7 +16,12 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class DequeIterator implements Iterator<Item> {
-        Node current = first;
+        Node current;
+
+        private DequeIterator()
+        {
+            current = first;
+        }
 
         @Override
         public boolean hasNext() {
@@ -25,6 +30,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
+            if (!hasNext()) throw new NoSuchElementException();
             Item item = current.item;
             current = current.next;
             return item;
@@ -77,6 +83,7 @@ public class Deque<Item> implements Iterable<Item> {
      */
     public void addFirst(Item item)
     {
+        if (item == null) throw new NullPointerException();
         Node oldFirst = first;
         first = new Node();
         first.item = item;
@@ -90,6 +97,7 @@ public class Deque<Item> implements Iterable<Item> {
      */
     public void addLast(Item item)
     {
+        if (item == null) throw new NullPointerException();
         Node oldLast = last;
         last = new Node();
         last.item = item;
@@ -114,8 +122,8 @@ public class Deque<Item> implements Iterable<Item> {
         if(isEmpty()) throw new NoSuchElementException("Stack underflow");
         Item item = first.item;
         first = first.next;
-        if(isEmpty()) last = null;
         n--;
+        if(isEmpty()) last = null;
         return item;
     }
 
@@ -128,8 +136,9 @@ public class Deque<Item> implements Iterable<Item> {
         if(isEmpty()) throw new NoSuchElementException("Stack underflow");
         Item item = last.item;
         last = last.previous;
-        if(isEmpty()) first = null;
+        last.next = null;
         n--;
+        if(isEmpty()) first = null;
         return item;
     }
 
@@ -142,19 +151,13 @@ public class Deque<Item> implements Iterable<Item> {
         deque.addLast(15);
         deque.removeFirst();
         deque.removeLast();
-        deque.addFirst(4);
-        deque.addFirst(3);
-        deque.addFirst(2);
-        deque.addFirst(1);
-        deque.addLast(6);
-        deque.addLast(7);
-        deque.addLast(8);
-        deque.addLast(9);
-        deque.addLast(10);
 
         for (int i: deque)
         {
             System.out.println(i);
+            for (int j : deque) {
+                System.out.println(j);
+            }
         }
 
     }
