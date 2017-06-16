@@ -61,7 +61,6 @@ public class FastCollinearPoints {
                     if(isSorted(collinearPoints))
                     {
                         segments.add(new LineSegment(p, tmp[k-1]));
-
                     }
                     j = k-1;
                 }
