@@ -5,10 +5,10 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
-    private final Stack<Board> solution;
+    private Move solutionMove;
     private final boolean isSolvable;
 
-    // find a solution to the initial board (using the A* algorithm)
+    // find a solutionMove to the initial board (using the A* algorithm)
     public Solver(Board initial)
     {
         if(initial == null)
@@ -16,39 +16,41 @@ public class Solver {
             throw new NullPointerException();
         }
 
-        solution = new Stack<>();
-        solution.push(initial);
 
         MinPQ<Move> boards = new MinPQ<>();
-        Move lastMove = new Move(initial, null);
+        solutionMove =  new Move(initial, null);
+        boards.insert(solutionMove);
 
         MinPQ<Move> twinBoards = new MinPQ<>();
-        Move lastTwin = new Move(initial.twin(), null);
+        Move twinMove = new Move(initial.twin(), null);
+        twinBoards.insert(twinMove);
 
-        while(!solution.peek().isGoal())
+        while(!solutionMove.board.isGoal())
         {
-            if(lastTwin.board.isGoal())
+            if(twinMove.board.isGoal())
             {
                 isSolvable = false;
                 return;
             }
 
-            for (Board b: lastMove.board.neighbors())
+
+            for (Board b: solutionMove.board.neighbors())
             {
-                if(lastMove.previous == null || !b.equals(lastMove.previous.board))
+                if(solutionMove.previous == null || !b.equals(solutionMove.previous.board))
                 {
-                    boards.insert(new Move(b, lastMove));
+                    boards.insert(new Move(b, solutionMove));
                 }
             }
-            lastMove = boards.delMin();
-            solution.push(lastMove.board);
-            for(Board t: lastTwin.board.neighbors())
+            solutionMove = boards.delMin();
+
+            for(Board t: twinMove.board.neighbors())
             {
-                if(lastTwin.previous == null || !t.equals(lastTwin.previous.board)) {
-                    twinBoards.insert(new Move(t, lastTwin));
+                if(twinMove.previous == null || !t.equals(twinMove.previous.board)) {
+                    twinBoards.insert(new Move(t, twinMove));
                 }
             }
-            lastTwin = twinBoards.delMin();
+            twinMove = twinBoards.delMin();
+
         }
         isSolvable = true;
 
@@ -56,9 +58,9 @@ public class Solver {
 
     private class Move implements Comparable<Move>
     {
-        private Board board;
+        public Board board;
         private Move previous;
-        private int moves = 0;
+        public int moves = 0;
         private int priority;
 
         public Move(Board board, Move previous) {
@@ -78,7 +80,6 @@ public class Solver {
         }
     }
 
-
     // is the initial board solvable?
     public boolean isSolvable()
     {
@@ -90,22 +91,25 @@ public class Solver {
     {
         if(isSolvable)
         {
-            return solution.size()-1;
+            return solutionMove.moves;
         }
         return -1;
     }
 
-    // sequence of boards in a shortest solution; null if unsolvable
+    // sequence of boards in a shortest solutionMove; null if unsolvable
     public Iterable<Board> solution()
     {
         if(isSolvable)
         {
-            Stack<Board> copy = new Stack<>();
-            for(Board b: solution)
+            Move copy = solutionMove;
+            Stack<Board> solution = new Stack<>();
+            while(copy != null)
             {
-                copy.push(b);
+                solution.push(copy.board);
+                copy = copy.previous;
             }
-            return copy;
+
+            return solution;
         }
         return null;
     }
@@ -124,9 +128,9 @@ public class Solver {
         // solve the puzzle
         Solver solver = new Solver(initial);
 
-        // print solution to standard output
+        // print solutionMove to standard output
         if (!solver.isSolvable())
-            StdOut.println("No solution possible");
+            StdOut.println("No solutionMove possible");
         else {
             StdOut.println("Minimum number of moves = " + solver.moves());
             for (Board board : solver.solution())
