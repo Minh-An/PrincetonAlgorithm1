@@ -1,7 +1,4 @@
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.RedBlackBST;
-import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.*;
 
 public class PointSET {
 
@@ -11,7 +8,7 @@ public class PointSET {
     // construct an empty set of points
     public PointSET()
     {
-        points = new RedBlackBST();
+        points = new RedBlackBST<>();
         n = 0;
     }
 
@@ -28,7 +25,8 @@ public class PointSET {
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p)
     {
-        points.put(p, ++n);
+        if(p == null) throw new IllegalArgumentException();
+        if (!points.contains(p)) points.put(p, ++n);
     }
     // does the set contain point p?
     public boolean contains(Point2D p)
@@ -39,6 +37,8 @@ public class PointSET {
     // draw all points to standard draw
     public void draw()
     {
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
         for(Point2D p: points.keys())
         {
             p.draw();
@@ -66,7 +66,7 @@ public class PointSET {
         Point2D nearest = null;
         for (Point2D point: points.keys())
         {
-            if (nearest == null || point.distanceTo(p) < nearest.distanceTo(p))
+            if (nearest == null || point.distanceSquaredTo(p) < nearest.distanceSquaredTo(p))
             {
                 nearest = point;
             }
@@ -77,6 +77,15 @@ public class PointSET {
     // unit testing of the methods (optional)
     public static void main(String[] args)
     {
-
+        PointSET tree = new PointSET();
+        tree.insert(new Point2D(0.1, 0.4));
+        tree.insert(new Point2D(0.8, 0.6));
+        tree.insert(new Point2D(0.1, 0.0));
+        tree.insert(new Point2D(0.6, 0.5));
+        tree.insert(new Point2D(0.6, 0.4));
+        System.out.println(tree.nearest(new Point2D(0.6,0.3)));
+        for (Point2D p: tree.range(new RectHV(0.4,0.3,0.8,0.6))) {
+            System.out.println(p);
+        }
     }
 }
